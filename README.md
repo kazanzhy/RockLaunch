@@ -1,4 +1,4 @@
-# RockLaunch
+# RockLunch
 [NASA space apps challenge 2018](https://2018.spaceappschallenge.org/challenges/can-you-build/when-next-rocket-launch/details)
 
 ## The Challenge
