@@ -2,7 +2,30 @@
 
 {% block content %} 
 
+<h2>Spaceports</h2>
 
+<table class="table table-bordered">
+    <thead>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Spaceport</th>
+            <th>Complex</th>
+            <th>Country</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+        {% for port in ports %}
+        <tr>
+            <td>{{ port.spaceport }}</td>
+            <td>{{ port.complex }}</td>
+            <td>{{ port.country }}</td>
+            <td>{{ port.latitude }}</td>
+            <td>{{ port.longitude }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
 
