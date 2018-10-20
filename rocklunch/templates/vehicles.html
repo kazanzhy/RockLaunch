@@ -14,13 +14,20 @@
             <th>Modification</th>
             <th>Manufacturer</th>
         </tr>
-        <tr><td></td></tr>
-        <tr><td></td></tr>
+        {% for vehicle in vehicles %}
+        <tr>
+            <td>{% if vehicle.logo %}<img src="{{vehicle.logo}}" height="200">{% endif %}</td>
+            <td>{{ vehicle.vehicle }}</td>
+            <td>{{ vehicle.modification }}</td>
+            <td>{{ vehicle.company }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 
 
 {% endblock %}
+
 
 
 

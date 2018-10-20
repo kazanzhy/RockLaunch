@@ -4,7 +4,7 @@
 
 <h2>Spaceports</h2>
 
-<table class="table table-bordered">
+<table class="table table-stripped">
     <thead>
     </thead>
     <tbody>
@@ -12,16 +12,14 @@
             <th>Spaceport</th>
             <th>Complex</th>
             <th>Country</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
+            <th>Geo</th>
         </tr>
         {% for port in ports %}
         <tr>
             <td>{{ port.spaceport }}</td>
             <td>{{ port.complex }}</td>
             <td>{{ port.country }}</td>
-            <td>{{ port.latitude }}</td>
-            <td>{{ port.longitude }}</td>
+            <td><a href="https://maps.google.com/maps?q={{port.latitude}},{{port.longitude}}">{{port.latitude}}, {{port.longitude}}</a></td>
         </tr>
         {% endfor %}
     </tbody>

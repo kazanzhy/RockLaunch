@@ -1,3 +1,4 @@
+from flask import url_for
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
@@ -13,15 +14,15 @@ class Company(BaseModel):
         pass
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    company = Column(String(64), unique = True)
-    country = Column(String(32), unique = True)
-    logo = Column(String(128), unique = True)
+    company = Column(String(64))
+    country = Column(String(32))
+    logo = Column(String(128))
 
     vehicle = relationship("Vehicle", back_populates="company")
     satellite = relationship("Satellite", back_populates="company")
 
     def __repr__(self):
-        return '<{} ({})>'.format(self.company, self.country)
+        return '{} ({})'.format(self.company, self.country)
 
 
 class Vehicle(BaseModel):
@@ -32,16 +33,16 @@ class Vehicle(BaseModel):
         pass
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    vehicle = Column(String(64), unique = True)
-    modification = Column(String(32), unique = True)
+    vehicle = Column(String(64))
+    modification = Column(String(32))
     company_id = Column(Integer, ForeignKey("company.id"))
-    logo = Column(String(128), unique = True)
+    logo = Column(String(128))
 
     company = relationship("Company", back_populates="vehicle")
     launch = relationship("Launch", back_populates="vehicle")
 
     def __repr__(self):
-        return '<{} ({})>'.format(self.vehicle, self.modification)
+        return '{} ({})'.format(self.vehicle, self.modification)
 
 
 class Satellite(BaseModel):
@@ -52,14 +53,14 @@ class Satellite(BaseModel):
         pass
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    satellite = Column(String(64), unique = True)
-    modification = Column(String(32), unique = True)
+    satellite = Column(String(64))
+    modification = Column(String(32))
     company_id = Column(Integer, ForeignKey("company.id"))
     company = relationship("Company", back_populates="satellite")
     launch = relationship("Launch", back_populates="satellite")
 
     def __repr__(self):
-        return '<{} ({})>'.format(self.vehicle, self.modification)
+        return '{} ({})'.format(self.vehicle, self.modification)
 
 
 class Spaceport(BaseModel):
@@ -70,16 +71,16 @@ class Spaceport(BaseModel):
         pass
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    spaceport = Column(String(64), unique = True)
-    complex = Column(String(64), unique = True)
-    country = Column(String(32), unique = True)
+    spaceport = Column(String(64))
+    complex = Column(String(64))
+    country = Column(String(32))
     latitude = Column(Float)
     longitude = Column(Float)
 
     launch = relationship("Launch", back_populates="spaceport")
 
     def __repr__(self):
-        return '<{} ({})>'.format(self.spaceport, self.complex)
+        return '{} ({})'.format(self.spaceport, self.complex)
 
 class Launch(BaseModel):
 
@@ -92,8 +93,8 @@ class Launch(BaseModel):
     vehicle_id = Column(Integer, ForeignKey("vehicle.id"))
     spaceport_id = Column(Integer, ForeignKey("spaceport.id"))
     satellite_id = Column(Integer, ForeignKey("satellite.id"))
-    mission = Column(String(64), unique = True)
-    orbit = Column(String(16), unique = True)
+    mission = Column(String(64))
+    orbit = Column(String(16))
     webcast = Column(String(64))
     description = Column(String(512))
     window_from = Column(DateTime)
@@ -105,7 +106,10 @@ class Launch(BaseModel):
     spaceport = relationship("Spaceport",  back_populates="launch")
 
     def __repr__(self):
-        return '<{} ({})>'.format(self.mission, self.vehicle)
+        return '{} ({})'.format(self.mission, self.vehicle)
+
+    def get_url():
+        return url_for('launch', args=[self.id])
 
 BaseModel.metadata.create_all(engine)
 
