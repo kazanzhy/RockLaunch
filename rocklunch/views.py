@@ -17,7 +17,7 @@ def all():
     startdate = request.args.get('startdate', default = '1961-04-12', type = str)
     enddate = request.args.get('enddate', default = datetime.date.today().isoformat(), type = str)
 
-    link = 'https://launchlibrary.net/1.4/launch'
+    link = 'http://launchlibrary.net/1.4/launch'
     params = {'startdate': startdate, 'enddate': enddate, 'limit': limit}
     data = requests.get(link, params = params).json()
 
@@ -27,7 +27,7 @@ def all():
 
 @app.route('/upcoming')
 def upcoming():
-    link = 'https://launchlibrary.net/1.4/launch'
+    link = 'http://launchlibrary.net/1.4/launch'
     limit = request.args.get('limit', default = 10, type = int)
     params = {'startdate': datetime.date.today(), 'limit': limit}
     data = requests.get(link, params = params).json()
@@ -36,7 +36,7 @@ def upcoming():
 
 @app.route('/launch/<int:id>')
 def launch(id):
-    r = requests.get('https://launchlibrary.net/1.4/launch/' + str(id))
+    r = requests.get('http://launchlibrary.net/1.4/launch/' + str(id))
     launch = r.json()['launches'][0]
     return render_template('launch.html', launch=launch)
 
