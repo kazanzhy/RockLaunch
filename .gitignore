@@ -1,16 +1,3 @@
-bin/
-bin/*
-lib/
-lib/*
-share/
-share/*
-local/
-local/*
-include/
-include/*
-.idea/
-.idea/*
-
 dist/
 build/
 instance/
