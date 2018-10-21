@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from rocklunch import app
+from config import HOST, PORT
 
-app.run(host='0.0.0.0')
+app.run(host=HOST, port=PORT)

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<h2>Upcoming Launches</h2>
+
+<table class="table table-stripped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Launch and status</th>
+      <th>Window</th>
+      <th>Watch</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for launch in launches %}
+    <tr>
+        <td><a href="{{ url_for('launch', id=launch.id) }}">{{ launch.name }}</a></td>
+        <td>
+        {% if launch.status == 1 %}<span class="badge badge-success">Green</span>
+        {% elif launch.status == 2 %}<span class="badge badge-danger">Red</span>
+        {% elif launch.status == 3 %}<span class="badge badge-primary">Success</span>
+        {% elif launch.status == 4 %}<span class="badge badge-secondary">Failed</span>
+        {% endif %}
+        <br>
+        {{ launch.net }}
+        </td>
+        <td>Start: {{ launch.windowstart }}<br>End: {{ launch.windowend }}</td>
+        <td>
+            {% if launch.vidURLs %}
+                {% for url in launch.vidURLs %}
+                    <p><a href="{{ url }}">{{ url }}</a></p>
+                {% endfor %}
+            {% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br>
+
+{% if count != total %}
+<a href="?limit={{ total }}"><button type="button" class="btn btn-primary">See all <span class="badge badge-light">{{ total }}</span></button></a>
+{% endif %}
+
+{% endblock %}
+
+
+

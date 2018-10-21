@@ -1,5 +1,7 @@
-from wtforms import Form, StringField, validators
+from wtforms import Form, StringField, DateField, IntegerField
 
 
-class MainForm(Form):
-    link = StringField('Link', [validators.Length(min=3, max=55), validators.Required(), validators.URL()])
+class LaunchSearchForm(Form):
+    startdate = StringField()
+    enddate = StringField()
+    limit = IntegerField()

@@ -4,15 +4,76 @@
 
 <h2>Launch</h2>
 
-<b>Mission:</b>
-<b>Vehicle:</b>
-<b>Spaceport:</b>
-<b>Orbit:</b>
-<b>Start date:</b>
-<b>Webcast:</b>
-<b>Description:</b>
-<b>Window from:</b>
-<b>Window to:</b>
+<table class="table table-responsive">
+    <thead>
+    {% if launch.status == 1 %}<tr class="table-success">
+    {% elif launch.status == 2 %}<tr class="table-danger">
+    {% elif launch.status == 3 %}<tr class="table-primary">
+    {% elif launch.status == 4 %}<tr class="table-secondary">
+    {% endif %}
+        <th colspan="100%"><center>{{ launch.name }}</center></th>
+    </tr>
+    </thead>
+  <tbody>
+    <tr>
+        <th>Launch</th>
+        <td><strong>{{ launch.net }}</strong></td>
+        <td>Window start: {{ launch.windowstart }}<br>Window end: {{ launch.windowend }}</td>
+    </tr>
+    <tr>
+        <th>Info</th>
+            {% if launch.infoURLs %}
+                {% for link in launch.infoURLs %}
+                <td><a href="{{link}}">{{link}}</a></td>
+                {% endfor %}
+            {% endif %}
+    </tr>
+    <tr>
+        <th>Video</th>
+            <td></td><td>{% for link in launch.vidURLs %}<a href="{{link}}">{{link}}</a><br>{% endfor %}</td>
+    </tr>
+
+    <tr>
+        <th>Location</th>
+        <td><a href="{{ launch.location.pads[0].wikiURL }}">{{ launch.location.pads[0].name }}</a></td>
+        <td><a href="{{ launch.location.pads[0].mapURL }}"><img src="/static/img/maps.png" height="30"></a></td>
+    </tr>
+
+    <tr>
+        <th>Rocket</th>
+        <td><a href="{{launch.rocket.wikiURL}}">{{launch.rocket.name}}</td>
+        <td rowspan="3"><center><img src="{{launch.rocket.imageURL}}" width="200"></center></td>
+    </tr>
+    <tr>
+        <th></th><td>Family: {{launch.rocket.familyname}}</td>
+    </tr>
+    <tr>
+        <th></th><td>Configuration: {{launch.rocket.configuration}}</td>
+    </tr>
+    <tr>
+        <th>Missions</th>
+        {% for mission in launch.missions %}
+        <td><a href="{{mission.wikiURL}}">{{mission.name}}</a>:<br>{%for payload in mission.payloads%}{{payload.name}}<br>{%endfor%}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for mission in launch.missions %}
+        <th></th><td>{{mission.description}}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <th>Launch Service Provider</th><td><a href="{{launch.lsp.wikiURL}}">{{launch.lsp.name}} ({{launch.lsp.countryCode}})</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
 
 {% endblock %}
 

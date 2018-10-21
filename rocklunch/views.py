@@ -1,50 +1,44 @@
  # -*- coding: utf-8 -*-
 
-from flask import request, render_template, redirect, url_for, abort
-from . import app, session
-from .models import *
+from flask import request, render_template, url_for
+from . import app
 from .forms import *
 
-
-@app.route('/admin')
-def admin():
-    abort(401)
-
+import requests
+import datetime
 
 @app.route('/')
-@app.route('/index')
 def index():
     return render_template('index.html')
 
+@app.route('/all')
+def all():
+    limit = request.args.get('limit', default = 10, type = int)
+    startdate = request.args.get('startdate', default = '1961-04-12', type = str)
+    enddate = request.args.get('enddate', default = datetime.date.today().isoformat(), type = str)
 
-@app.route('/launches')
-def launches():
-    launches = session.query(Launch).all()
-    return render_template('launches.html', launches=launches)
+    link = 'https://launchlibrary.net/1.4/launch'
+    params = {'startdate': startdate, 'enddate': enddate, 'limit': limit}
+    data = requests.get(link, params = params).json()
 
-
-@app.route('/spaceports')
-def spaceports():
-    ports = session.query(Spaceport).all()
-    return render_template('spaceports.html', ports=ports)
-
-
-@app.route('/vehicles')
-def vehicles():
-    vehicles = session.query(Vehicle).all()
-    return render_template('vehicles.html', vehicles=vehicles)
+    form = LaunchSearchForm(limit=limit, startdate=startdate, enddate=enddate)
+    return render_template('all.html', form=form, launches=data['launches'], total=data['total'], count=data['count'])
 
 
-@app.route('/companies')
-def companies():
-    companies = session.query(Company).all()
-    return render_template('companies.html', companies=companies)
+@app.route('/upcoming')
+def upcoming():
+    link = 'https://launchlibrary.net/1.4/launch'
+    limit = request.args.get('limit', default = 10, type = int)
+    params = {'startdate': datetime.date.today(), 'limit': limit}
+    data = requests.get(link, params = params).json()
+    return render_template('upcoming.html', launches=data['launches'], total=data['total'], count=data['count'])
 
 
-@app.route('/add')
-def add():
-    form = []
-    return render_template('add.html', form=form)
+@app.route('/launch/<int:id>')
+def launch(id):
+    r = requests.get('https://launchlibrary.net/1.4/launch/' + str(id))
+    launch = r.json()['launches'][0]
+    return render_template('launch.html', launch=launch)
 
 
 

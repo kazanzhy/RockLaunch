@@ -22,33 +22,25 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('launches')}}">Launches</a>
+        <a class="nav-link" href="{{ url_for('all')}}">All launches</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('spaceports')}}">Spaceports</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('vehicles')}}">Vehicles</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('companies')}}">Companies</a>
-      </li>
-        <li class="nav-item active">
-        <a class="nav-link" href="/add">Add launch<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{{ url_for('upcoming')}}">Upcoming launches</a>
       </li>
     </ul>
   </div>
 </nav>
 {% endblock %}
     <div class="container-fluid">
-        <div class="row">
-            <hr>
-        </div>
+        <div class="row"><hr></div>
         <div class="row">
             <div class="col-sm-2"></div>
-            <div class="col-sm-8 ">
-            {% block content %}{% endblock %}
-            </div>
+            <div class="col-sm-8">{% block content %}{% endblock %}</div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8"><hr>Powered by <a href="http://launchlibrary.net">LaunchLibrary</a></div>
             <div class="col-sm-2"></div>
         </div>
     </div>

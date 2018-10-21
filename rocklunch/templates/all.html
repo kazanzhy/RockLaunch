@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<h2>All launches</h2>
+
+<form action="" method="get" name="home">
+    <p>
+    Startdate: {{ form.startdate(size=10) }} 
+    Enddate: {{ form.enddate(size=10) }}
+    Limit: {{ form.limit(size=10) }}
+    <input type="submit" value="Filter">
+    </p>
+</form>
+
+
+<table class="table table-stripped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Launch and status</th>
+      <th>Window</th>
+      <th>Watch</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for launch in launches %}
+    <tr>
+        <td><a href="{{ url_for('launch', id=launch.id) }}">{{ launch.name }}</a></td>
+        <td>
+        {{ launch.net }}
+        <br>
+        {% if launch.status == 1 %}<span class="badge badge-success">Green</span>
+        {% elif launch.status == 2 %}<span class="badge badge-danger">Red</span>
+        {% elif launch.status == 3 %}<span class="badge badge-primary">Success</span>
+        {% elif launch.status == 4 %}<span class="badge badge-secondary">Failed</span>
+        {% endif %}
+        </td>
+        <td>Start: {{ launch.windowstart }}<br>End: {{ launch.windowend }}</td>
+        <td>
+            {% if launch.vidURLs %}
+                {% for url in launch.vidURLs %}
+                    <a href="{{ url }}">{{ url }}</a><br>
+                {% endfor %}
+            {% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br>
+
+{% if count != total %}
+<a href="?startdate={{request.args.get('startdate')}}&enddate={{request.args.get('enddate')}}&limit={{total}}">
+    <button type="button" class="btn btn-primary">See all <span class="badge badge-light">{{ total }}</span></button>
+</a>
+{% endif %}
+
+{% endblock %}
+
