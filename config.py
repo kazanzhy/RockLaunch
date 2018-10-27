@@ -1,14 +1,2 @@
-import os
 
-DEBUG = True
-
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite')
-SQLALCHEMY_MIGRATE_REPO = os.path.join(BASE_DIR, 'migrations')
-
-CSRF_ENABLED = True
-SECRET_KEY = 'you-will-never-guess'
-
-HOST = '0.0.0.0'
-PORT = '5000'
+TOKEN = '747634004:AAFr2rL4VBTl9h-dNOR6u7RBUMBK-bZvcxE'

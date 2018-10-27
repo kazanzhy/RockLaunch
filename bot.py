@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import requests
-import datetime as dt
+import os
 import logging
+import datetime as dt
+
+import requests
 
 from telegram.ext import Updater, CommandHandler, Job
 
+from database import session
+from config import TOKEN
 
 def get_launches(num=5):
+    # Gets next 5 launches
     link = 'https://launchlibrary.net/1.4/launch/next/' + str (num)
     data = requests.get(link).json()
     launches = data['launches']
@@ -32,12 +37,9 @@ def upcoming(bot, update):
 
 
 
-HOST =  '10.100.6.210:5000'
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-updater = Updater(token='')
+updater = Updater(token=TOKEN)
 dispatcher = updater.dispatcher
-job_queue = updater.job_queue
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
@@ -46,9 +48,8 @@ upcoming_handler = CommandHandler('upcoming', upcoming)
 dispatcher.add_handler(upcoming_handler)
 
 
-updater.start_polling()
-
-
+updater.start_polling(poll_interval=0.0, timeout=10, clean=False, bootstrap_retries=-1, read_latency=2.0, allowed_updates=None)
+#updater.start_webhook(listen='127.0.0.1', port=80, url_path='', cert=None, key=None, clean=False, bootstrap_retries=0, webhook_url=None, allowed_updates=None)
 
 
 
