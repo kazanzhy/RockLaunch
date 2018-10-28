@@ -77,6 +77,7 @@ class Payload(BaseModel):
     __tablename__ = 'payload'
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
+    mission_id = Column(Integer, ForeignKey('mission.id'))
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -89,7 +90,10 @@ class Mission(BaseModel):
     type = Column(SmallInteger)
     wikiURL = Column(String(256))
     typeName = Column(String(64))
-    agencies = ForeignKey()
+    agencies_id = Column(Integer, ForeignKey('agency.id'))
+    agencies = relationship('Agency')
+    payloads_id = Column(Integer, ForeignKey('payload.id'))
+    payloads = relationship('Payload')
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -103,8 +107,8 @@ class LSP(BaseModel):
     type = Column(SmallInteger)
     infoURL = Column(String(256))
     wikiURL = Column(String(256))
-    changed = Column(DateTime(timezone=True))
     infoURLs = Column(ARRAY(String, dimensions=1))
+    changed = Column(DateTime(timezone=True))
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -139,12 +143,10 @@ class Launch(BaseModel):
     location = relationship('Location')
     rocket_id = Column(Integer, ForeignKey('rocket.id'))
     rocket = relationship('Rocket')
-    missions = […]
+    missions_id = Column(Integer, ForeignKey('mission.id'))
+    missions = relationship('Mission')
     lsp_id = Column(Integer, ForeignKey('lsp.id'))
     lsp = relationship("LSP")
-    # Relationships
-
-
     def __repr__(self):
         return '{}'.format(self.name)
 
