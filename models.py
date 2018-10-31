@@ -17,7 +17,7 @@ class Chat(BaseModel):
         return '{} {} (@{})'.format(self.first_name, self.last_name, self.username)
 
 class Agency(BaseModel):
-    #Model for table of all agencies
+    # Model for table of all agencies
     __tablename__ = 'agency'
     id = Column(Integer, primary_key=True)
     name = Column(String(256))
@@ -27,7 +27,11 @@ class Agency(BaseModel):
     infoURL = Column(String(256))
     wikiURL = Column(String(256))
     changed	= Column(DateTime(timezone=True))
-    infoURLs = Column(ARRAY(String, dimensions=1))
+    _infoURLs = Column(String(1024))
+    @property
+    def infoURLs(self): return _infoURLs.split(',')
+    @infoURLs.setter
+    def infoURLs(self, urls): _infoURLs = ','.join(urls)
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -41,7 +45,9 @@ class Pad(BaseModel):
     mapURL = Column(String(256))
     latitude = Column(Float)
     longitude = Column(Float)
-    agencies = []
+    agencies_id = Column(Integer, ForeignKey('agency.id'))
+    agencies = relationship('Agency')
+    location_id = Column(Integer, ForeignKey('location.id'))
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -53,7 +59,7 @@ class Location(BaseModel):
     infoURL = Column(String(256))
     wikiURL = Column(String(256))
     countryCode = Column(String(16))
-    pads = […]
+    pads = relationship('Pad')
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -64,11 +70,15 @@ class Rocket(BaseModel):
     name = Column(String(64))
     configuration = Column(String(16))
     familyname = Column(String(64))
-    agencies = ForeignKey('Agency')
+    agencies_id = Column(Integer, ForeignKey('agency.id'))
+    agencies = relationship('Agency')
     wikiURL = Column(String(256))
-    infoURLs = Column(ARRAY(String, dimensions=1))
     imageURL = Column(String(256))
-    imageSizes = Column(ARRAY(Integer, dimensions=1))	
+    _infoURLs = Column(String(1024))
+    @property
+    def infoURLs(self): return _infoURLs.split(',')
+    @infoURLs.setter
+    def infoURLs(self, urls): _infoURLs = ','.join(urls)
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -86,14 +96,14 @@ class Mission(BaseModel):
     __tablename__ = 'mission'
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
-    description = Column(String(512))
+    description = Column(String(1024))
     type = Column(SmallInteger)
     wikiURL = Column(String(256))
     typeName = Column(String(64))
     agencies_id = Column(Integer, ForeignKey('agency.id'))
     agencies = relationship('Agency')
-    payloads_id = Column(Integer, ForeignKey('payload.id'))
     payloads = relationship('Payload')
+    launch_id = Column(Integer, ForeignKey('launch.id'))
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -107,8 +117,12 @@ class LSP(BaseModel):
     type = Column(SmallInteger)
     infoURL = Column(String(256))
     wikiURL = Column(String(256))
-    infoURLs = Column(ARRAY(String, dimensions=1))
     changed = Column(DateTime(timezone=True))
+    _infoURLs = Column(String(1024))
+    @property
+    def infoURLs(self): return _infoURLs.split(',')
+    @infoURLs.setter
+    def infoURLs(self, urls): _infoURLs = ','.join(urls)
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -129,10 +143,6 @@ class Launch(BaseModel):
     status = Column(SmallInteger)
     inhold = Column(SmallInteger)
     tbdtime = Column(SmallInteger)
-    vidURLs	= Column(ARRAY(String, dimensions=1))
-    vidURL = Column(String(64))
-    infoURLs = Column(ARRAY(String, dimensions=1))
-    infoURL = Column(String(64))
     holdreason = Column(String(64))
     failreason = Column(String(64))
     tbddate	= Column(SmallInteger)
@@ -143,10 +153,21 @@ class Launch(BaseModel):
     location = relationship('Location')
     rocket_id = Column(Integer, ForeignKey('rocket.id'))
     rocket = relationship('Rocket')
-    missions_id = Column(Integer, ForeignKey('mission.id'))
     missions = relationship('Mission')
     lsp_id = Column(Integer, ForeignKey('lsp.id'))
     lsp = relationship("LSP")
+    vidURL = Column(String(64))
+    infoURL = Column(String(64))
+    _vidURLs = Column(String(1024))
+    @property
+    def vidURLs(self): return _vidURLs.split(',')
+    @vidURLs.setter
+    def vidURLs(self, urls): _vidURLs = ','.join(urls)
+    _infoURLs = Column(String(1024))
+    @property
+    def infoURLs(self): return _infoURLs.split(',')
+    @infoURLs.setter
+    def infoURLs(self, urls): _infoURLs = ','.join(urls)
     def __repr__(self):
         return '{}'.format(self.name)
 
