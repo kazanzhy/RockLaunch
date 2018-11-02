@@ -17,21 +17,16 @@ class Chat(BaseModel):
         return '{} {} (@{})'.format(self.first_name, self.last_name, self.username)
 
 class Agency(BaseModel):
-    # Model for table of all agencies
+    # Model for table of all agencies and launch service providers
     __tablename__ = 'agency'
     id = Column(Integer, primary_key=True)
     name = Column(String(256))
     abbrev = Column(String(16))
     countryCode = Column(String(16))
     type = Column(SmallInteger)
-    infoURL = Column(String(256))
     wikiURL = Column(String(256))
     changed	= Column(DateTime(timezone=True))
-    _infoURLs = Column(String(1024))
-    @property
-    def infoURLs(self): return _infoURLs.split(',')
-    @infoURLs.setter
-    def infoURLs(self, urls): _infoURLs = ','.join(urls)
+    infoURLs = Column(String(1024))
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -40,7 +35,6 @@ class Pad(BaseModel):
     __tablename__ = 'pad'
     id = Column(Integer, primary_key=True)
     name = Column(String(256))
-    infoURL = Column(String(256))
     wikiURL = Column(String(256))
     mapURL = Column(String(256))
     latitude = Column(Float)
@@ -74,11 +68,7 @@ class Rocket(BaseModel):
     agencies = relationship('Agency')
     wikiURL = Column(String(256))
     imageURL = Column(String(256))
-    _infoURLs = Column(String(1024))
-    @property
-    def infoURLs(self): return _infoURLs.split(',')
-    @infoURLs.setter
-    def infoURLs(self, urls): _infoURLs = ','.join(urls)
+    infoURLs = Column(String(1024))
     def __repr__(self):
         return '{}'.format(self.name)
 
@@ -107,25 +97,6 @@ class Mission(BaseModel):
     def __repr__(self):
         return '{}'.format(self.name)
 
-class LSP(BaseModel):
-    # Model for table of all launch service providers
-    __tablename__ = 'lsp'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256))
-    abbrev = Column(String(16))
-    countryCode = Column(String(16))
-    type = Column(SmallInteger)
-    infoURL = Column(String(256))
-    wikiURL = Column(String(256))
-    changed = Column(DateTime(timezone=True))
-    _infoURLs = Column(String(1024))
-    @property
-    def infoURLs(self): return _infoURLs.split(',')
-    @infoURLs.setter
-    def infoURLs(self, urls): _infoURLs = ','.join(urls)
-    def __repr__(self):
-        return '{}'.format(self.name)
-
 class Launch(BaseModel):
     # Model for table of all launches
     __tablename__ = 'launch'
@@ -134,15 +105,11 @@ class Launch(BaseModel):
     windowstart	= Column(DateTime(timezone=True))
     windowend	= Column(DateTime(timezone=True))
     net	= Column(DateTime(timezone=True))
-    wsstamp = Column(BigInteger)
-    westamp = Column(BigInteger)
-    netstamp = Column(BigInteger)
-    isostart = Column(String(32))
-    isoend = Column(String(32))
-    isonet = Column(String(32))
     status = Column(SmallInteger)
     inhold = Column(SmallInteger)
     tbdtime = Column(SmallInteger)
+    vidURLs = Column(String(1024))
+    infoURLs = Column(String(1024))
     holdreason = Column(String(64))
     failreason = Column(String(64))
     tbddate	= Column(SmallInteger)
@@ -154,21 +121,12 @@ class Launch(BaseModel):
     rocket_id = Column(Integer, ForeignKey('rocket.id'))
     rocket = relationship('Rocket')
     missions = relationship('Mission')
-    lsp_id = Column(Integer, ForeignKey('lsp.id'))
-    lsp = relationship("LSP")
-    vidURL = Column(String(64))
-    infoURL = Column(String(64))
-    _vidURLs = Column(String(1024))
-    @property
-    def vidURLs(self): return _vidURLs.split(',')
-    @vidURLs.setter
-    def vidURLs(self, urls): _vidURLs = ','.join(urls)
-    _infoURLs = Column(String(1024))
-    @property
-    def infoURLs(self): return _infoURLs.split(',')
-    @infoURLs.setter
-    def infoURLs(self, urls): _infoURLs = ','.join(urls)
+    lsp_id = Column(Integer, ForeignKey('agency.id'))
+    lsp = relationship("Agency")
+
     def __repr__(self):
         return '{}'.format(self.name)
 
 BaseModel.metadata.create_all(engine)
+
+
